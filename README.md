@@ -1,35 +1,56 @@
-# Coffee Shop Full Stack
+# Coffee Shop Frontend
 
-## Full Stack Nano - IAM Final Project
+## Getting Setup
 
-Udacity has decided to open a new digitally enabled cafe for students to order drinks, socialize, and study hard. But they need help setting up their menu experience.
+> _tip_: this frontend is designed to work with [Flask-based Backend](../backend). It is recommended you stand up the backend first, test using Postman, and then the frontend should integrate smoothly.
 
-You have been called on to demonstrate your newly learned skills to create a full stack drink menu application. The application must:
+### Installing Dependencies
 
-1. Display graphics representing the ratios of ingredients in each drink.
-2. Allow public users to view drink names and graphics.
-3. Allow the shop baristas to see the recipe information.
-4. Allow the shop managers to create new drinks and edit existing drinks.
+#### Installing Node and NPM
 
-## Tasks
+This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (the download includes NPM) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
 
-There are `@TODO` comments throughout the project. We recommend tackling the sections in order. Start by reading the READMEs in:
+#### Installing Ionic Cli
 
-1. [`./backend/`](./backend/README.md)
-2. [`./frontend/`](./frontend/README.md)
+The Ionic Command Line Interface is required to serve and build the frontend. Instructions for installing the CLI is in the [Ionic Framework Docs](https://ionicframework.com/docs/installation/cli).
 
-## About the Stack
+#### Installing project dependencies
 
-We started the full stack application for you. It is designed with some key functional areas:
+This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the `frontend` directory of this repository. After cloning, open your terminal and run:
 
-### Backend
+```bash
+npm install
+```
 
-The `./backend` directory contains a partially completed Flask server with a pre-written SQLAlchemy module to simplify your data needs. You will need to complete the required endpoints, configure, and integrate Auth0 for authentication.
+> _tip_: **npm i** is shorthand for **npm install**
 
-[View the README.md within ./backend for more details.](./backend/README.md)
+## Required Tasks
 
-### Frontend
+### Configure Environment Variables
 
-The `./frontend` directory contains a complete Ionic frontend to consume the data from the Flask server. You will only need to update the environment variables found within (./frontend/src/environment/environment.ts) to reflect the Auth0 configuration details set up for the backend app.
+Ionic uses a configuration file to manage environment variables. These variables ship with the transpiled software and should not include secrets.
 
-[View the README.md within ./frontend for more details.](./frontend/README.md)
+- Open `./src/environments/environments.ts` and ensure each variable reflects the system you stood up for the backend.
+
+## Running Your Frontend in Dev Mode
+
+Ionic ships with a useful development server which detects changes and transpiles as you work. The application is then accessible through the browser on a localhost port. To run the development server, cd into the `frontend` directory and run:
+
+```bash
+ionic serve
+```
+
+> _tip_: Do not use **ionic serve** in production. Instead, build Ionic into a build artifact for your desired platforms.
+> [Checkout the Ionic docs to learn more](https://ionicframework.com/docs/cli/commands/build)
+
+## Key Software Design Relevant to Our Coursework
+
+The frontend framework is a bit beefy; here are the two areas to focus your study.
+
+### Authentication
+
+The authentication system used for this project is Auth0. `./src/app/services/auth.service.ts` contains the logic to direct a user to the Auth0 login page, managing the JWT token upon successful callback, and handle setting and retrieving the token from the local store. This token is then consumed by our DrinkService (`./src/app/services/drinks.service.ts`) and passed as an Authorization header when making requests to our backend.
+
+### Authorization
+
+The Auth0 JWT includes claims for permissions based on the user's role within the Auth0 system. This project makes use of these claims using the `auth.can(permission)` method which checks if particular permissions exist within the JWT permissions claim of the currently logged in user. This method is defined in  `./src/app/services/auth.service.ts` and is then used to enable and disable buttons in `./src/app/pages/drink-menu/drink-form/drink-form.html`.
